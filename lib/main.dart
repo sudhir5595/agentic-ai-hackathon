@@ -208,11 +208,15 @@ class _ChatScreenState extends State<ChatScreen> {
     });
 
     final inputImage = InputImage.fromFilePath(image.path);
-    final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
-    final RecognizedText recognizedText =
-        await textRecognizer.processImage(inputImage);
+    final latinRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+    final devnagariRecognizer = TextRecognizer(script: TextRecognitionScript.devanagiri);
 
-    final extractedText = recognizedText.text;
+    final latinText = (await latinRecognizer.processImage(inputImage)).text;
+    final devnagariText = (await devnagariRecognizer.processImage(inputImage)).text;
+
+    final extractedText = devnagariText.trim().length > latinText.trim().length
+        ? devnagariText
+        : latinText;
 
     // Remove the "Analyzing image" message before sending request
     setState(() {
