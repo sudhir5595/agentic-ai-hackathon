@@ -140,6 +140,30 @@
       "languageVersion": "3.4"
     },
     {
+      "name": "firebase_ai",
+      "rootUri": "file:///C:/Users/aarav/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_ai-2.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "firebase_app_check",
+      "rootUri": "file:///C:/Users/aarav/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_app_check-0.3.2+10",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "firebase_app_check_platform_interface",
+      "rootUri": "file:///C:/Users/aarav/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_app_check_platform_interface-0.1.1+10",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "firebase_app_check_web",
+      "rootUri": "file:///C:/Users/aarav/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_app_check_web-0.2.0+14",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
       "name": "firebase_auth",
       "rootUri": "file:///C:/Users/aarav/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_auth-5.7.0",
       "packageUri": "lib/",
@@ -174,6 +198,12 @@
       "rootUri": "file:///C:/Users/aarav/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core_web-2.24.1",
       "packageUri": "lib/",
       "languageVersion": "3.4"
+    },
+    {
+      "name": "firebase_vertexai",
+      "rootUri": "file:///C:/Users/aarav/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_vertexai-1.8.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
     },
     {
       "name": "flutter",
@@ -744,6 +774,18 @@
       "rootUri": "file:///C:/Users/aarav/AppData/Local/Pub/Cache/hosted/pub.dev/web-1.1.1",
       "packageUri": "lib/",
       "languageVersion": "3.4"
+    },
+    {
+      "name": "web_socket",
+      "rootUri": "file:///C:/Users/aarav/AppData/Local/Pub/Cache/hosted/pub.dev/web_socket-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "web_socket_channel",
+      "rootUri": "file:///C:/Users/aarav/AppData/Local/Pub/Cache/hosted/pub.dev/web_socket_channel-3.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
     },
     {
       "name": "win32",

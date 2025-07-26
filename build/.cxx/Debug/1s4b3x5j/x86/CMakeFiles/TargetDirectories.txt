@@ -1,2 +1,0 @@
-C:/Users/aarav/chaitali/hack2skill/medical_assistant/build/.cxx/Debug/1s4b3x5j/x86/CMakeFiles/edit_cache.dir
-C:/Users/aarav/chaitali/hack2skill/medical_assistant/build/.cxx/Debug/1s4b3x5j/x86/CMakeFiles/rebuild_cache.dir

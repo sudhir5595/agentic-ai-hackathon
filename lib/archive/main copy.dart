@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import '../services/sahayak_api.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -8,18 +7,13 @@ import 'dart:io';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:photo_gallery/photo_gallery.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:sahayak_app/screens/image_generator_screen.dart';
-import '../services/sahayak_api.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:io';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
-import 'package:image_picker/image_picker.dart';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+void main() {
+  runApp(const SahayakApp());
+}
 
 class SahayakApp extends StatelessWidget {
   const SahayakApp({super.key});
@@ -40,35 +34,7 @@ class SahayakApp extends StatelessWidget {
           bodyMedium: TextStyle(color: Colors.black87),
         ),
       ),
-      home: const MainScreen(),
-    );
-  }
-}
-
-class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Sahayak'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(icon: Icon(Icons.school), text: 'Assistant'),
-              Tab(icon: Icon(Icons.image), text: 'Image Gen'),
-            ],
-          ),
-        ),
-        body: const TabBarView(
-          children: [
-            TeacherDashboard(),
-            ImageGeneratorScreen(),
-          ],
-        ),
-      ),
+      home: const TeacherDashboard(),
     );
   }
 }
@@ -138,9 +104,7 @@ class _ChatScreenState extends State<ChatScreen> {
   late stt.SpeechToText _speech;
   final ImagePicker _picker = ImagePicker();
   bool _isListening = false;
-  bool _isLoading = false;
   String _speechText = '';
-  String? _sessionId;
 
   @override
   void initState() {
@@ -166,43 +130,48 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
-  Future<void> _sendMessage(String text) async {
-    if (text.trim().isEmpty) return;
+  void _sendMessage(String message) async {
     setState(() {
-      _isLoading = true;
-      _messages.add({"role": "user", "content": text});
+      _messages.add({"role": "user", "content": message});
     });
 
     try {
-      // Generate or reuse session ID
-      final userId = 'teacher-${DateTime.now().millisecondsSinceEpoch}';
-      _sessionId ??=
-          'session_${userId}_${DateTime.now().millisecondsSinceEpoch}';
+      // Send to backend chat endpoint
+      final response = await http.post(
+        Uri.parse(
+            'http://192.168.1.10:5000/chat'), // Update with your backend URL
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'message': message}),
+      );
 
-      // Call API to get raw JSON string
-      final raw = await SahayakApi.ask(text, userId: userId);
-
-      // Parse out the agent’s reply
-      final Map<String, dynamic> json = jsonDecode(raw);
-      // for SSE you'd split on "\n" and decode each "data: …" chunk; assuming simple JSON here:
-      final content =
-          (json['content'] ?? json['output']) as Map<String, dynamic>?;
-      final parts = content?['parts'] as List<dynamic>?;
-      final reply = parts != null && parts.isNotEmpty
-          ? (parts[0]['text'] as String)
-          : (json['output']?.toString() ?? raw);
-
-      setState(() => _messages.add({"role": "assistant", "content": reply}));
-    } catch (e) {
-      setState(() => _messages.add({
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          _messages.add({
             "role": "assistant",
-            "content": '❌ Error: $e',
-          }));
-    } finally {
-      setState(() => _isLoading = false);
-      _controller.clear();
-      // Optionally scroll to bottom if you have a scroll controller
+            "content": data['answer'] ?? "No response"
+          });
+        });
+      } else {
+        setState(() {
+          _messages.add({
+            "role": "assistant",
+            "content":
+                "Sorry, I am unable to respond right now. Please try again later."
+          });
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _messages.add({
+          "role": "assistant",
+          "content":
+              "Connection issue detected. Please check your internet connection."
+        });
+      });
     }
+
+    _controller.clear();
   }
 
   void _startListening() async {
@@ -253,7 +222,7 @@ class _ChatScreenState extends State<ChatScreen> {
     // Remove the "Analyzing image" message before sending request
     setState(() {
       _messages.removeWhere(
-              (msg) => msg['content'] == "Analyzing image, please wait...");
+          (msg) => msg['content'] == "Analyzing image, please wait...");
     });
 
     if (extractedText.isEmpty) {
@@ -297,7 +266,7 @@ class _ChatScreenState extends State<ChatScreen> {
         _messages.add({
           "role": "assistant",
           "content":
-          "Connection error during image analysis. Please check your internet."
+              "Connection error during image analysis. Please check your internet."
         });
       });
     }
@@ -311,9 +280,45 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
+  Future<String?> _showModelChoiceDialog(BuildContext context) async {
+    return showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Choose Model'),
+        content: const Text('Which model do you want to use for this query?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'online'),
+            child: const Text('Google API (Online)'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'local'),
+            child: const Text('Gemma3n-2b (Local)'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<String> runGemma3n2bModel(String prompt) async {
+    // TODO: Integrate Gemma3n-2b inference here
+    await Future.delayed(const Duration(seconds: 1));
+    return "Local Gemma3n-2b model response for: $prompt";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Sahayak - AI Teaching Assistant'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.image),
+            tooltip: "Upload Textbook Image",
+            onPressed: _pickAndUploadImage,
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Expanded(
@@ -443,6 +448,9 @@ class _ContentCreationScreenState extends State<ContentCreationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Content Creation'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -678,6 +686,9 @@ class LessonPlannerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Lesson Planner'),
+      ),
       body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -710,6 +721,9 @@ class TextbookAnalyzerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Textbook Helper'),
+      ),
       body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

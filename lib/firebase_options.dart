@@ -7,12 +7,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running a different command. '
-        'For more information, please see the docs: '
-        'https://firebase.google.com/docs/flutter/setup#configure-your-app',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -57,4 +52,15 @@ class DefaultFirebaseOptions {
     storageBucket: 'formidable-feat-466408-r6.firebasestorage.app',
     iosBundleId: 'com.sahayak.ui',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCMz7zG3xUbY25M3z1mu0CJ-qKob7P5SfQ',
+    appId: '1:44474009687:web:2c3d10d9079bd4707f7b12',
+    messagingSenderId: '44474009687',
+    projectId: 'formidable-feat-466408-r6',
+    authDomain: 'formidable-feat-466408-r6.firebaseapp.com',
+    storageBucket: 'formidable-feat-466408-r6.firebasestorage.app',
+    measurementId: 'G-P7XTE47KWH',
+  );
+
 }
