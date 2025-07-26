@@ -8,18 +8,8 @@ import 'dart:io';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:sahayak_app/screens/image_generator_screen.dart';
-import '../services/sahayak_api.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:io';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
-import 'package:image_picker/image_picker.dart';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'dart:typed_data';
+import 'package:firebase_ai/firebase_ai.dart';
 
 class SahayakApp extends StatelessWidget {
   const SahayakApp({super.key});
@@ -40,35 +30,7 @@ class SahayakApp extends StatelessWidget {
           bodyMedium: TextStyle(color: Colors.black87),
         ),
       ),
-      home: const MainScreen(),
-    );
-  }
-}
-
-class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Sahayak'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(icon: Icon(Icons.school), text: 'Assistant'),
-              Tab(icon: Icon(Icons.image), text: 'Image Gen'),
-            ],
-          ),
-        ),
-        body: const TabBarView(
-          children: [
-            TeacherDashboard(),
-            ImageGeneratorScreen(),
-          ],
-        ),
-      ),
+      home: const TeacherDashboard(),
     );
   }
 }
@@ -132,6 +94,10 @@ class ChatScreen extends StatefulWidget {
   _ChatScreenState createState() => _ChatScreenState();
 }
 
+
+
+
+
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
   final List<Map<String, dynamic>> _messages = [];
@@ -178,6 +144,8 @@ class _ChatScreenState extends State<ChatScreen> {
       final userId = 'teacher-${DateTime.now().millisecondsSinceEpoch}';
       _sessionId ??=
           'session_${userId}_${DateTime.now().millisecondsSinceEpoch}';
+
+      
 
       // Call API to get raw JSON string
       final raw = await SahayakApi.ask(text, userId: userId);
@@ -314,6 +282,16 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Sahayak - AI Teaching Assistant'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.image),
+            tooltip: "Upload Textbook Image",
+            onPressed: _pickAndUploadImage,
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Expanded(
@@ -443,6 +421,9 @@ class _ContentCreationScreenState extends State<ContentCreationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Content Creation'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -678,6 +659,9 @@ class LessonPlannerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Lesson Planner'),
+      ),
       body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -710,6 +694,9 @@ class TextbookAnalyzerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Textbook Helper'),
+      ),
       body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
