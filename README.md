@@ -8,10 +8,13 @@ A platform to help school teachers, especially from rural areas to automate less
 
 * ✍️ Generate lessons and quizzes in Marathi using Gemini API
 * 🖼️ Generate topic-related visual aids (images)
-* 🗓️ Schedule daily/weekly lesson generation tasks
-* ☁️ Store generated content securely on Google Cloud Storage (GCS)
-* ⚙️ CLI-first interface with clean modular Python code
-* 🔜 Ready for future web UI (Flask/Streamlit)
+* 🗓️ Schedule daily/weekly lesson generation tasks through mobile app
+* ☁️ Store the conversations history and memory on agent engine
+  # School Agent: projects/formidable-feat-466408-r6/locations/us-central1/reasoningEngines/2451743804173058048
+  # Intelligent Agent: projects/formidable-feat-466408-r6/locations/us-central1/reasoningEngines/7395007345165598720
+* CLI-first interface with clean modular Python code
+* Ready for web UI 
+  # Web App: https://gen-lang-client-0441566453.web.app/
 
 ---
 
@@ -20,8 +23,7 @@ A platform to help school teachers, especially from rural areas to automate less
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-org/ai_teaching_assistant.git
-cd ai_teaching_assistant
+git clone https://github.com/your-org/agentic-ai-hackathon.git
 ```
 
 ### 2. Create and activate a virtual environment
@@ -37,45 +39,13 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Configure your environment
-
-* Set your **Gemini API key** (Google GenAI):
-
-```bash
-export GEMINI_API_KEY="your-gemini-api-key"
-```
-
-* (Optional) Edit `config/config.yaml` to store your API key and GCS bucket name
-
 ---
-
-
-## 🧱 Project Structure
-
-```
-ai_teaching_assistant/
-├── ai_teaching_assistant/     # Core app modules
-│   ├── cli.py                 # Command-line interface
-│   ├── gemini_client.py       # Handles Gemini API calls
-│   ├── gcs_client.py          # Uploads content to GCS
-│   ├── scheduler.py           # Periodic jobs (APScheduler)
-│   └── utils.py               # Helper functions
-├── config/
-│   └── config.yaml            # App configuration (API keys, bucket)
-├── tests/                     # Test suite
-│   ├── test_gemini_client.py
-├── requirements.txt
-├── README.md
-├── .gitignore
-└── .github/workflows/
-    └── python-app.yml         # GitHub Actions for CI
-```
 
 ---
 
 ##  Testing
 
-Run unit tests (if present):
+Run unit tests:
 
 ```bash
 pytest tests/
@@ -85,7 +55,6 @@ pytest tests/
 
 ## 💠 Future Roadmap
 
-* Streamlit-based interactive web interface
 * Mobile-friendly lesson viewer
 * Teacher feedback integration
 * Offline content cache and syncing
