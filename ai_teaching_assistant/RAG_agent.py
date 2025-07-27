@@ -1,24 +1,13 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[30]:
 
 
 from vertexai import rag
 from vertexai.generative_models import GenerativeModel, Tool
 import vertexai
 
-
-# In[31]:
-
-
 PROJECT_ID = "formidable-feat-466408-r6"  # @param {type:"string"}
 LOCATION = "us-central1"  # @param {type:"string"}
 
 vertexai.init(project=PROJECT_ID, location=LOCATION)
-
-
-# In[32]:
 
 
 # Create RagCorpus
@@ -30,9 +19,6 @@ embedding_model_config = rag.RagEmbeddingModelConfig(
 )
 
 
-# In[33]:
-
-
 display_name="all-marathi-books"
 
 rag_corpus = rag.create_corpus(
@@ -42,21 +28,10 @@ rag_corpus = rag.create_corpus(
     ),
 )
 
-
-# In[34]:
-
-
 rag_corpus.name
 
 
-# In[35]:
-
-
 paths = ["gs://agentic_ai_ebooks_bucket/Books"]
-# paths = ["https://drive.google.com/drive/folders/classroom_books"]
-
-
-# In[36]:
 
 
 # Import Files to the RagCorpus
@@ -82,13 +57,10 @@ end_time = time.time()
 print("Total time to build the indexing", end_time-start_time)
 
 
-# In[37]:
 
 
 rag.list_files(rag_corpus.name)
 
-
-# In[12]:
 
 
 # Direct context retrieval
@@ -107,14 +79,6 @@ response = rag.retrieval_query(
     text="What is RAG and why it is helpful?",
     rag_retrieval_config=rag_retrieval_config,
 )
-# print(response)
-
-
-# In[4]:
-
-
-# Enhance generation
-# Create a RAG retrieval tool
 
 # Direct context retrieval
 rag_retrieval_config = rag.RagRetrievalConfig(
@@ -139,8 +103,6 @@ rag_retrieval_tool = Tool.from_retrieval(
 )
 
 
-# In[5]:
-
 
 # Create a Gemini model instance
 rag_model = GenerativeModel(
@@ -152,15 +114,10 @@ response = rag_model.generate_content("What are the 21st century skills")
 print(response.text)
 
 
-# In[16]:
-
 
 # Generate response
 response = rag_model.generate_content("Help me to summarize the ala paus ala poem")
 print(response.text)
-
-
-# In[6]:
 
 
 # Generate response
@@ -168,15 +125,11 @@ response = rag_model.generate_content("Help me to prepare a content for class 1 
 print(response.text)
 
 
-# In[17]:
-
 
 # Generate response
 response = rag_model.generate_content("Help me to summarize the ala paus ala")
 print(response.text)
 
-
-# In[18]:
 
 
 # Generate response
@@ -184,39 +137,22 @@ response = rag_model.generate_content("Help me to summarize the Mazya ya otivar"
 print(response.text)
 
 
-# In[19]:
-
-
 # Generate response
 response = rag_model.generate_content("What are the six thinking hats")
 print(response.text)
-
-
-# In[21]:
-
 
 # Generate response
 response = rag_model.generate_content("Help me to summarize the gadi ali gadi ali poem")
 print(response.text)
 
 
-# In[23]:
-
-
 # Generate response
 response = rag_model.generate_content("I am teacher who teaches for the 1st standard students. Help me to generate the content for the first month of the school")
 print(response.text)
 
-
-# In[24]:
-
-
 # Generate response
 response = rag_model.generate_content("I am teacher who teaches for the 1st standard students. Help me to generate the quiz for the first chapter of the part 1 book")
 print(response.text)
-
-
-# In[ ]:
 
 
 

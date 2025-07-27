@@ -10,10 +10,6 @@ STAGING_BUCKET = "gs://agentic_ai_ebooks_bucket"  # @param {type:"string"}
 import vertexai
 vertexai.init(project=PROJECT_ID, location=LOCATION, staging_bucket=STAGING_BUCKET)
 
-
-# In[3]:
-
-
 from datetime import datetime
 from google import adk
 from google.adk.agents import Agent
@@ -27,10 +23,6 @@ from google.adk.tools import google_search
 from google.adk.tools import LongRunningFunctionTool
 from google.adk.tools import ToolContext
 
-
-# In[4]:
-
-
 from vertexai import rag
 from google.adk.tools.retrieval.vertex_ai_rag_retrieval import VertexAiRagRetrieval
 from vertexai.generative_models import GenerativeModel, Tool
@@ -41,72 +33,15 @@ import json
 import io
 from google.cloud import storage
 
-
-# In[5]:
-
-
 import os
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"]="1"
 os.environ["GOOGLE_CLOUD_PROJECT"]="formidable-feat-466408-r6"
 os.environ["GOOGLE_CLOUD_LOCATION"]="us-central1"
 
 
-# In[6]:
-
-
 from google import genai
 client = genai.Client()
 
-
-# In[7]:
-
-
-# Save to GCS bucket
-# def upload_to_gcs():
-#     """
-#     Uploads a file to the GCS bucket - no input is needed.
-    
-#     Returns:
-#         str: Public URL of the uploaded file.
-#     """
-    
-#     bucket_name = "agentic_ai_ebooks_bucket"
-#     source_file_name = "sample_image.png"
-#     destination_blob_name = "uploaded_images/sample_image.png"
-    
-#     try:
-#         # Initialize the GCS client
-#         storage_client = storage.Client()
-
-#         # Get the bucket
-#         bucket = storage_client.bucket(bucket_name)
-
-#         # Create a blob object
-#         blob = bucket.blob(destination_blob_name)
-
-#         # Upload the file
-#         blob.upload_from_filename(source_file_name)
-
-#         print(f"File {source_file_name} uploaded to {destination_blob_name} in bucket {bucket_name}.")
-        
-#         # Return the public URL of the uploaded file
-#         return blob.public_url
-
-#     except Exception as e:
-#         print(f"An error occurred: {e}")
-#         return None
-# if __name__ == "__main__":
-#     # Example usage
-    
-
-#     public_url = upload_to_gcs(bucket_name, source_file_name, destination_blob_name)
-#     if public_url:
-#         print(f"File uploaded successfully. Public URL: {public_url}")
-#     else:
-#         print("File upload failed.")
-
-
-# In[8]:
 
 
 # Define the image generation tool
@@ -153,41 +88,6 @@ async def generate_image(prompt: str, tool_context: ToolContext):
             }
 
     
-    # images[0].save("sample_image.png")
-    
-
-#     bucket_name = "agentic_ai_ebooks_bucket"
-#     source_file_name = "sample_image.png"
-#     destination_blob_name = "uploaded_images/sample_image.png"
-
-#     try:
-#         # Initialize the GCS client
-#         storage_client = storage.Client()
-
-#         # Get the bucket
-#         bucket = storage_client.bucket(bucket_name)
-
-#         # Create a blob object
-#         blob = bucket.blob(destination_blob_name)
-
-#         # Upload the file
-#         blob.upload_from_filename(source_file_name)
-
-#         print(f"File {source_file_name} uploaded to {destination_blob_name} in bucket {bucket_name}.")
-
-#         # Return the public URL of the uploaded file
-#         return blob.public_url
-
-#     except Exception as e:
-#         print(f"An error occurred: {e}")
-#         return None
-    
-#     # public_url = upload_to_gcs()
-    
-#     return None
-
-
-# In[9]:
 
 
 def save_to_gcs(tool_context: ToolContext, image_bytes, filename: str, counter: str):
@@ -221,20 +121,9 @@ def save_to_gcs(tool_context: ToolContext, image_bytes, filename: str, counter: 
         # --- End Save to GCS ---
 
 
-# In[10]:
-
-
-# long_running_tool = LongRunningFunctionTool(func=generate_image)
-
-
-# In[11]:
-
-
 agent_model = "gemini-2.0-flash-001"
 AGENT_APP_NAME = "Image_generation_agent"
 
-
-# In[12]:
 
 
 image_generation_agent = Agent(
@@ -246,10 +135,6 @@ image_generation_agent = Agent(
         tools = [generate_image],
 )
 
-
-# In[13]:
-
-
 # Define an ADK agent
 root_agent = adk.Agent(
     model="gemini-2.0-flash",
@@ -257,18 +142,11 @@ root_agent = adk.Agent(
     instruction="You are an helpful Agent",
 )
 
-
-# In[14]:
-
-
 app = AdkApp(
    agent=image_generation_agent,
     enable_tracing=True# Required.
    # session_service_builder=session_service_builder,  # Optional.
 )
-
-
-# In[15]:
 
 
 # This will create a session locally for interaction
@@ -284,21 +162,6 @@ for event in app.stream_query(
         )
 
 
-# In[ ]:
-
-
-
-
-
-# In[26]:
-
-
-# await query_agent(remote_agent)
-
-
-# In[27]:
-
-
 # This will create a session locally for interaction
 session = app.create_session(user_id="123")
 for event in app.stream_query(
@@ -309,14 +172,10 @@ for event in app.stream_query(
     print(event)
 
 
-# In[16]:
 
 
 display_name = "Image_Generation_Agent"
 description = "An agent that will generate the images based on the user query"
-
-
-# In[18]:
 
 
 remote_agent = agent_engines.create(
@@ -333,9 +192,6 @@ remote_agent = agent_engines.create(
     display_name=display_name,
     description=description
 )
-
-
-# In[41]:
 
 
 resource_name='projects/formidable-feat-466408-r6/locations/us-central1/reasoningEngines/1369753993697296384'
@@ -355,9 +211,6 @@ remote_agent = agent_engines.update(
 )
 
 
-# In[15]:
-
-
 # Step 8: Query the Agent
 async def query_agent(remote_agent):
     async for event in remote_agent.stream_query(
@@ -367,13 +220,8 @@ async def query_agent(remote_agent):
         print(event)
 
 
-# In[17]:
-
 
 query_agent(remote_agent)
-
-
-# In[19]:
 
 
 for event in remote_agent.stream_query(
@@ -384,9 +232,6 @@ for event in remote_agent.stream_query(
     print(event)
 
 
-# In[35]:
-
-
 PROJECT_ID = "formidable-feat-466408-r6"
 LOCATION = "us-central1"
 # The app_name used with this service should be the Reasoning Engine ID or name
@@ -395,22 +240,12 @@ REASONING_ENGINE_APP_NAME = "projects/44474009687/locations/us-central1/reasonin
 session_service = VertexAiSessionService(project=PROJECT_ID, location=LOCATION)
 
 
-# In[43]:
-
-
 runner = adk.Runner(
     agent=root_agent,
     app_name=REASONING_ENGINE_APP_NAME,
     session_service=session_service)
 
 
-# In[44]:
-
-
-# Create a session
-# session = await session_service.create_session(
-#        app_name=REASONING_ENGINE_APP_NAME,
-#        user_id='memory_test_4')
 
 #check for existing sessions
 existing_sessions = await session_service.list_sessions(
@@ -430,14 +265,8 @@ else:
     print(f"Created new session: {SESSION_ID}")
 
 
-# In[45]:
-
 
 temp_session = new_session
-
-
-# In[46]:
-
 
 # Helper method to send query to the runner
 def call_agent(query, session_id, user_id):
@@ -450,37 +279,9 @@ def call_agent(query, session_id, user_id):
             print("Agent Response: ", final_response)
 
 
-# In[49]:
-
-
 user_input = "Generate the wooden table image"
 
-
-# In[50]:
-
-
 call_agent(user_input, temp_session.id, temp_session.user_id)
-
-
-# In[109]:
-
-
-# session = app.create_session(user_id='user')
-
-
-# In[114]:
-
-
-# for event in app.stream_query(
-#     user_id="user",
-#     # session_id=SESSION_ID, # Optional. you can pass in the session_id when querying the agent
-#     message="Generate a laptop image",
-# ):
-#     print(event)
-    # image_op.append(event)
-
-
-# In[ ]:
 
 
 
