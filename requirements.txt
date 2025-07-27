@@ -4,7 +4,7 @@ google-auth>=2.22.0
 apscheduler>=3.10.4
 pytest>=7.4.0
 google-adk>=0.0.2
-google-cloud-aiplatform>=1.91.0,
-google-genai>=1.5.0,
-pillow,
+google-cloud-aiplatform>=1.91.0
+google-genai>=1.5.0
+pillow
 pydantic>=2.10.6
