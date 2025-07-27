@@ -1,2 +1,0 @@
-C:/Users/aarav/chaitali/hack2skill/medical_assistant/build/.cxx/RelWithDebInfo/5y6e5d3f/armeabi-v7a/CMakeFiles/edit_cache.dir
-C:/Users/aarav/chaitali/hack2skill/medical_assistant/build/.cxx/RelWithDebInfo/5y6e5d3f/armeabi-v7a/CMakeFiles/rebuild_cache.dir

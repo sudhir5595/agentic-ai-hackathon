@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base href="$FLUTTER_BASE_HREF" />
+
+    <meta charset="UTF-8" />
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+    <meta name="description" content="A new Flutter project." />
+
+    <!-- iOS meta tags & icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="ui" />
+    <meta
+      name="google-signin-client_id"
+      content="44474009687-k5bpnjk2h919et71valb5irtvldik4q2.apps.googleusercontent.com"
+    />
+    <link rel="apple-touch-icon" href="icons/Icon-192.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <title>ui</title>
+    <link rel="manifest" href="manifest.json" />
+  </head>
+  <body>
+    <!-- ✅ Firebase SDKs (must come before flutter_bootstrap.js) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+
+    <!-- ✅ Firebase Config and Initialization -->
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyCCcKIBsjYCIMwxvtJDCU2Ep4PYnRItVug",
+        authDomain: "sahayak-50e71.firebaseapp.com",
+        projectId: "sahayak-50e71",
+        storageBucket: "sahayak-50e71.appspot.com",
+        messagingSenderId: "995654705933",
+        appId: "1:995654705933:android:9a57f35fadcb408b178644",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <!-- ✅ Flutter App -->
+    <script src="flutter_bootstrap.js" async></script>
+  </body>
+</html>
